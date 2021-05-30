@@ -35,6 +35,9 @@ class NGio
 
 	public static function noLogin(api:String)
 	{
+		#if !forceNG
+		return;
+		#end
 		trace('INIT NOLOGIN');
 		GAME_VER = "v" + Application.current.meta.get('version');
 
@@ -60,6 +63,10 @@ class NGio
 
 	public function new(api:String, encKey:String, ?sessionId:String)
 	{
+		#if !forceNG
+		trace("skipped connecting to newgrounds");
+		return;
+		#end
 		trace("connecting to newgrounds");
 
 		NG.createAndCheckSession(api, sessionId);
@@ -89,6 +96,11 @@ class NGio
 
 	function onNGLogin():Void
 	{
+		#if !forceNG
+		trace("skipped attempted ng log-in!");
+		return;
+		#end
+
 		trace('logged in! user:${NG.core.user.name}');
 		isLoggedIn = true;
 		FlxG.save.data.sessionId = NG.core.sessionId;
@@ -140,13 +152,20 @@ class NGio
 
 		// add an update listener so we know when we get the new scores
 		// board.onUpdate.add(onNGScoresFetch);
+		#if forceNG
 		trace("shoulda got score by NOW!");
+		#end
 		// board.requestScores(20);// get the best 10 scores ever logged
 		// more info on scores --- http://www.newgrounds.io/help/components/#scoreboard-getscores
 	}
 
 	inline static public function postScore(score:Int = 0, song:String)
 	{
+		#if !forceNG
+		trace("skipped attempt at posting NG score!");
+		#end
+
+		#if forceNG
 		if (isLoggedIn)
 		{
 			for (id in NG.core.scoreBoards.keys())
@@ -161,10 +180,16 @@ class NGio
 				// trace('loaded scoreboard id:$id, name:${board.name}');
 			}
 		}
+		#end
 	}
 
 	function onNGScoresFetch():Void
 	{
+		#if !forceNG
+		trace("skipped attempt at fetching NG scoreboard!");
+		return;
+		#end
+
 		scoreboardsLoaded = true;
 
 		ngScoresLoaded.dispatch();
@@ -190,11 +215,17 @@ class NGio
 
 	inline static public function unlockMedal(id:Int)
 	{
+		#if !forceNG
+		trace("skipped attempt at unlocking NG medal!");
+		#end
+
+		#if forceNG
 		if (isLoggedIn)
 		{
 			var medal = NG.core.medals.get(id);
 			if (!medal.unlocked)
 				medal.sendUnlock();
 		}
+		#end
 	}
 }
