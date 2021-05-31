@@ -1,1 +1,1 @@
-import Paths;
+import utilities.Paths;
