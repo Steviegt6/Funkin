@@ -3,12 +3,14 @@ package funkin.characters.background;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 
-class BackgroundGirls extends FlxSprite
+class BackgroundGirls extends BackgroundDancer
 {
 	public function new(x:Float, y:Float)
 	{
 		super(x, y);
+	}
 
+	public override function setupAnimation():Void {
 		// BG fangirls dissuaded
 		frames = Paths.getSparrowAtlas('weeb/bgFreaks');
 
@@ -18,22 +20,10 @@ class BackgroundGirls extends FlxSprite
 		animation.play('danceLeft');
 	}
 
-	var danceDir:Bool = false;
-
 	public function getScared():Void
 	{
 		animation.addByIndices('danceLeft', 'BG fangirls dissuaded', CoolUtil.numberArray(14), "", 24, false);
 		animation.addByIndices('danceRight', 'BG fangirls dissuaded', CoolUtil.numberArray(30, 15), "", 24, false);
 		dance();
-	}
-
-	public function dance():Void
-	{
-		danceDir = !danceDir;
-
-		if (danceDir)
-			animation.play('danceRight', true);
-		else
-			animation.play('danceLeft', true);
 	}
 }
